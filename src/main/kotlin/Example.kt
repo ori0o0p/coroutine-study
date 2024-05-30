@@ -12,7 +12,33 @@ suspend fun main() {
 
 class Example {
     private val log = LoggerFactory.getLogger(this::class.java)
-    suspend fun main() = minjuRoutineJob()
+    suspend fun main() = minjuRoutineAsync()
+
+    suspend fun minjuRoutineAsync() {
+        coroutineScope {
+            val minju: Deferred<String> = async {
+                minju()
+            }
+            val findMinju: Deferred<Int> = async {
+                findMinju()
+            }
+            log.info("${minju.await()}를 ${findMinju.await()}일 만에 찾았습니다!")
+        }
+    }
+
+    suspend fun minju(): String {
+        log.info("민주 생성 중~~")
+        delay(500L)
+        log.info("생성 완료!")
+        return "민주"
+    }
+
+    suspend fun findMinju(): Int {
+        log.info("민주 찾는 중~~")
+        delay(1000L)
+        log.info("찾았습니다!")
+        return 511
+    }
 
     suspend fun minjuRoutineJob() {
         coroutineScope {
