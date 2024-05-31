@@ -12,8 +12,33 @@ suspend fun main() {
 
 class Example {
     private val log = LoggerFactory.getLogger(this::class.java)
-    suspend fun main() = minjuRoutineAsync()
+    suspend fun main() = minjuRoutineContext()
 
+    suspend fun minjuRoutineContext() {
+        coroutineScope {
+            launch(CoroutineName("아일릿-민주") + Dispatchers.Default) {
+                log.info("Hello, Minju!")
+                launch {
+                    log.info("Lovely Minju!")
+                }
+            }
+        }
+    }
+    
+    suspend fun cancelMinjuRoutine() {
+        coroutineScope { 
+            val minjuJob = launch {
+                minjuIsComing()
+            }
+            launch {
+                delay(400L)
+                minjuJob.cancel()
+                minjuJob.join()
+                log.info("민주가 사라졌어요..")
+            }
+        }
+    }
+    
     suspend fun minjuRoutineAsync() {
         coroutineScope {
             val minju: Deferred<String> = async {
